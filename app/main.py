@@ -8,9 +8,12 @@ import calendar
 from contextlib import asynccontextmanager
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, ROUND_HALF_UP
+import json
 import os
 import time
 from typing import Any, Dict, List, Literal, Optional
+
+from bson import json_util
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query, status
@@ -1224,4 +1227,8 @@ def explain_endpoint(
             detail=f"Unknown endpoint: {endpoint_name}",
         )
 
-    return {"endpoint": endpoint_name, "collection": collection_name, "explain": plan}
+    return {
+        "endpoint": endpoint_name,
+        "collection": collection_name,
+        "explain": json.loads(json_util.dumps(plan)),
+    }
